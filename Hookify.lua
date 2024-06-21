@@ -32,21 +32,21 @@
 local hooks = {}
 hooks.__index = hooks
 
-local HTTP = game:GetService("HttpService")
-local types = require(script:FindFirstChild("Types"))
-local embedBuilder = script:FindFirstChild("EmbedBuilder")
+local HttpService = game:GetService("HttpService")
+local types = require(script.Types)
+local embedBuilder = script.EmbedBuilder
 hooks.EmbedBuilder = require(embedBuilder)
 
 function hooks.new(webhook : string)
 	assert(webhook, 'No webhook was provided?')
-	assert(HTTP.HttpEnabled, 'HttpRequests are disabled!')
+	assert(HttpService.HttpEnabled, 'HttpRequests are disabled!')
 	assert(type(webhook) == "string", 'The webhook URL must be a string.')
 
-	local WebhookParameters = HTTP:RequestAsync({
+	local WebhookParameters = HttpService:RequestAsync({
 		Url = webhook,
 		Method = "GET"
 	})
-	local WebhookData = HTTP:JSONDecode(WebhookParameters["Body"])
+	local WebhookData = HttpService:JSONDecode(WebhookParameters["Body"])
 	if WebhookData.message then
 		assert(WebhookData.message ~= "Unknown Webhook", 'Webhook URL is invalid')
 	end
@@ -68,7 +68,7 @@ function hooks.new(webhook : string)
 end
 
 function hooks:Destroy()
-	local Deletion = HTTP:RequestAsync({
+	local Deletion = HttpService:RequestAsync({
 		Method = "DELETE",
 		Url = self.url
 	})
@@ -78,7 +78,7 @@ end
 function hooks:SendJSON(json : {})
 	assert(json, 'No data was provided')
 
-	local Response = HTTP:RequestAsync({
+	local Response = HttpService:RequestAsync({
 		Url = self.url,
 		Method = "POST",
 		Body = json,
@@ -88,14 +88,14 @@ function hooks:SendJSON(json : {})
 	})
 end
 
-function hooks:Send(content : types.webhookSendQuery | string?)
+function hooks:Send(content : types.webhookSendQuery)
 	assert(content, 'No data was provided')
 
 	local luaContent = {}
 	if type(content) == 'string' then
 		luaContent.content = content
-		local encoded = HTTP:JSONEncode(luaContent)
-		local Response = HTTP:RequestAsync({
+		local encoded = HttpService:JSONEncode(luaContent)
+		local Response = HttpService:RequestAsync({
 			Url = self.url,
 			Method = "POST",
 			Body = encoded,
@@ -126,8 +126,8 @@ function hooks:Send(content : types.webhookSendQuery | string?)
 		end
 	end
 
-	local encoded = HTTP:JSONEncode(luaContent)
-	local Response = HTTP:RequestAsync({
+	local encoded = HttpService:JSONEncode(luaContent)
+	local Response = HttpService:RequestAsync({
 		Url = self.url,
 		Method = "POST",
 		Body = encoded,
