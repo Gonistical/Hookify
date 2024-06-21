@@ -6,6 +6,8 @@ function builder.new()
 	local newEmbed = {}
 	setmetatable(newEmbed, builder)
 	newEmbed.fields = {}
+	newEmbed.image = {}
+	newEmbed.thumbnail = {}
 	return newEmbed
 end
 
