@@ -2,18 +2,18 @@
 
 	------------------------------------------------------------------------- 
 	
-	$$\   $$\                     $$\       $$$$$$$\  $$\                     
-	$$ |  $$ |                    $$ |      $$  __$$\ $$ |                    
-	$$ |  $$ | $$$$$$\   $$$$$$\  $$ |  $$\ $$ |  $$ |$$ | $$$$$$\  $$\   $$\ 
-	$$$$$$$$ |$$  __$$\ $$  __$$\ $$ | $$  |$$$$$$$\ |$$ |$$  __$$\ \$$\ $$  |
-	$$  __$$ |$$ /  $$ |$$ /  $$ |$$$$$$  / $$  __$$\ $$ |$$ /  $$ | \$$$$  / 
-	$$ |  $$ |$$ |  $$ |$$ |  $$ |$$  _$$<  $$ |  $$ |$$ |$$ |  $$ | $$  $$<  
-	$$ |  $$ |\$$$$$$  |\$$$$$$  |$$ | \$$\ $$$$$$$  |$$ |\$$$$$$  |$$  /\$$\ 
-	\__|  \__| \______/  \______/ \__|  \__|\_______/ \__| \______/ \__/  \__|
-                                                                          
+  	 _    _             _    _  __       
+ 	| |  | |           | |  (_)/ _|      
+ 	| |__| | ___   ___ | | ___| |_ _   _ 
+ 	|  __  |/ _ \ / _ \| |/ / |  _| | | |
+ 	| |  | | (_) | (_) |   <| | | | |_| |
+ 	|_|  |_|\___/ \___/|_|\_\_|_|  \__, |
+                                    __/ |
+                                   |___/ 
+                                                                 
     -------------------------------------------------------------------------  
     
-	HookBlox.lua
+	Hookify.lua
 	A Module that makes webhooks as easy as possible!
 	
 	------------------------------------------------------------------------- 
@@ -23,7 +23,7 @@
 	
 	------------------------------------------------------------------------- 
 	 
-	DEVFORUM POST: https://devforum.roblox.com/
+	DEVFORUM POST: https://devforum.roblox.com/t/hookblox-module-for-discord-webhooks/3032693
 	
 	------------------------------------------------------------------------- 
 --]]
@@ -41,7 +41,7 @@ function hooks.new(webhook : string)
 	assert(webhook, 'No webhook was provided?')
 	assert(HTTP.HttpEnabled, 'HttpRequests are disabled!')
 	assert(type(webhook) == "string", 'The webhook URL must be a string.')
-	
+
 	local WebhookParameters = HTTP:RequestAsync({
 		Url = webhook,
 		Method = "GET"
@@ -50,7 +50,7 @@ function hooks.new(webhook : string)
 	if WebhookData.message then
 		assert(WebhookData.message ~= "Unknown Webhook", 'Webhook URL is invalid')
 	end
-	
+
 	local WebhookBody : types.webhookBody = {
 		guild = {
 			guildId = WebhookData.guild_id,
@@ -62,12 +62,12 @@ function hooks.new(webhook : string)
 		url = WebhookData.url,
 		id = WebhookData.id
 	}
-	
+
 	setmetatable(WebhookBody, hooks)
 	return WebhookBody
 end
 
-function hooks:delete()
+function hooks:Destroy()
 	local Deletion = HTTP:RequestAsync({
 		Method = "DELETE",
 		Url = self.url
@@ -75,9 +75,9 @@ function hooks:delete()
 	self = {}
 end
 
-function hooks:sendJSON(json : {})
+function hooks:SendJSON(json : {})
 	assert(json, 'No data was provided')
-	
+
 	local Response = HTTP:RequestAsync({
 		Url = self.url,
 		Method = "POST",
@@ -88,9 +88,9 @@ function hooks:sendJSON(json : {})
 	})
 end
 
-function hooks:sendContent(content : types.webhookSendQuery | string?)
+function hooks:Send(content : types.webhookSendQuery | string?)
 	assert(content, 'No data was provided')
-	
+
 	local luaContent = {}
 	if type(content) == 'string' then
 		luaContent.content = content
@@ -105,17 +105,17 @@ function hooks:sendContent(content : types.webhookSendQuery | string?)
 		})
 		return
 	end
-	
+
 	local avatarURL = content.avatar
 	local username = content.name
 	local contentString = content.content
-	
+
 	luaContent.content = contentString
 	luaContent.username = username
 	luaContent.avatar_url = avatarURL
 	luaContent.thread_name = content.threadName
 	luaContent.embeds = content.embeds
-	
+
 	if content.flags then
 		if content.flags.suppressEmbeds and content.flags.suppressNotifs then
 			luaContent.flags = 4100
@@ -125,7 +125,7 @@ function hooks:sendContent(content : types.webhookSendQuery | string?)
 			luaContent.flags = 4
 		end
 	end
-	
+
 	local encoded = HTTP:JSONEncode(luaContent)
 	local Response = HTTP:RequestAsync({
 		Url = self.url,
@@ -135,7 +135,7 @@ function hooks:sendContent(content : types.webhookSendQuery | string?)
 			["Content-Type"] = "application/json"
 		}
 	})
-	
+
 	return Response
 end
 
