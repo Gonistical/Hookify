@@ -1,0 +1,51 @@
+@font-face {
+    font-family: Gotham Black;
+    src: url("/assets/fonts/Gotham-Black.otf");
+}
+
+@font-face {
+    font-family: Gotham Bold;
+    src: url("/assets/fonts/Gotham-Bold.otf");
+}
+
+@font-face {
+    font-family: Gotham Medium;
+    src: url("/assets/fonts/Gotham-Light.otf");
+}
+
+
+body {
+    background-color: rgb(12, 12, 12);
+    font-family: Gotham Bold;
+    color: white;
+}
+
+hr {
+    background-color: rgba(255, 255, 255, 0.226);
+    width: 96%;
+    height: 1px;
+    border-style: none;
+}
+
+.navbar {
+    background-color: black;
+    padding: 10px;
+    margin-left: 0%;
+}
+
+.navbar-left {
+    margin-left: 1%;
+    display: inline-block;
+    transform: translateY(12%);
+}
+
+.navbar-right {
+    text-align: right;
+    display: inline-block;
+    /*margin-left: 92%;*/
+}
+
+#navbar-logo {
+    height: 50px;
+    display: inline-block;
+}
