@@ -49,7 +49,7 @@ function builder:createField(fieldProperties : types.fieldProperties)
 	local field = {
 		name = fieldProperties.name,
 		value = fieldProperties.value,
-		inline = fieldProperties.inline
+		inline = fieldProperties.inline or false
 	}
 	table.insert(self.fields, field)
 end
