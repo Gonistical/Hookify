@@ -1,16 +1,16 @@
 @font-face {
     font-family: Gotham Black;
-    src: url("/assets/fonts/Gotham-Black.otf");
+    src: url("./assets/fonts/Gotham-Black.otf");
 }
 
 @font-face {
     font-family: Gotham Bold;
-    src: url("/assets/fonts/Gotham-Bold.otf");
+    src: url("./assets/fonts/Gotham-Bold.otf");
 }
 
 @font-face {
     font-family: Gotham Medium;
-    src: url("/assets/fonts/Gotham-Light.otf");
+    src: url("./assets/fonts/Gotham-Light.otf");
 }
 
 
