@@ -109,13 +109,23 @@ function hooks:Send(content : types.webhookSendQuery)
 	local avatarURL = content.avatar
 	local username = content.name
 	local contentString = content.content
-
+	local totalEmbeds = nil
 	luaContent.content = contentString
 	luaContent.username = username
 	luaContent.avatar_url = avatarURL
 	luaContent.thread_name = content.threadName
-	luaContent.embeds = content.embeds
-
+	luaContent.attachments = {}
+	
+	if content.embeds then
+		if not totalEmbeds then
+			totalEmbeds = {}
+		end
+		for i, embed in content.embeds do
+			table.insert(totalEmbeds, embed)
+		end
+	end
+	
+	luaContent.embeds = totalEmbeds
 	if content.flags then
 		if content.flags.suppressEmbeds and content.flags.suppressNotifs then
 			luaContent.flags = 4100
@@ -125,8 +135,9 @@ function hooks:Send(content : types.webhookSendQuery)
 			luaContent.flags = 4
 		end
 	end
-
+	
 	local encoded = HttpService:JSONEncode(luaContent)
+	print(encoded)
 	local Response = HttpService:RequestAsync({
 		Url = self.url,
 		Method = "POST",
