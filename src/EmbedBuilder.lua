@@ -5,9 +5,9 @@ builder.__index = builder
 function builder.new()
 	local newEmbed = {}
 	setmetatable(newEmbed, builder)
-	newEmbed.fields = {}
-	newEmbed.image = {}
-	newEmbed.thumbnail = {}
+	newEmbed.fields = nil
+	newEmbed.image = nil
+	newEmbed.thumbnail = nil
 	return newEmbed
 end
 
@@ -28,6 +28,12 @@ function builder:setTimestamp(timestamp: string)
 end
 
 function builder:setImages(imageProperties: types.imageProperties)
+	if not self.image then
+		self.image = {}
+	end
+	if not self.thumbnail then
+		self.thumbnail = {}
+	end
 	if imageProperties.image then
 		self.image.url = imageProperties.image
 	end
@@ -46,6 +52,9 @@ function builder:setAuthor(author: types.author)
 end
 
 function builder:createField(fieldProperties : types.fieldProperties)
+	if not self.fields then
+		self.fields = {}
+	end
 	local field = {
 		name = fieldProperties.name,
 		value = fieldProperties.value,
